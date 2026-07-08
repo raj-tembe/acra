@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acra-cli"
+version = "0.1.2"
+description = "Agentic CLI for LLM task execution, research, and workflow automation."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "GNU Affero General Public License v3" }
+authors = [ { name = "Raj Tembe" } ]
+keywords = ["cli", "agent", "llm", "langgraph", "autonomous", "research"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Environment :: Console",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "langgraph>=0.2.0",
+  "langchain>=0.3.0",
+  "langchain-core>=0.3.0",
+  "langchain-google-genai>=2.0.0",
+  "google-generativeai>=0.8.0",
+  "pydantic>=2.0.0",
+  "python-dotenv>=1.0.0",
+  "platformdirs>=4.0.0",
+  "chromadb>=0.5.0",
+  "arxiv>=2.1.0",
+  "tavily-python>=0.3.0",
+  "google-search-results>=2.4.0",
+  "PyGithub>=2.3.0",
+  "langsmith>=0.1.0",
+  "typer[all]>=0.9.0",
+  "rich>=13.0.0",
+  "prompt_toolkit>=3.0.0",
+  "keyring>=24.0.0",
+]
+
+[project.scripts]
+acra = "acra.cli:app_main"
+
+[project.optional-dependencies]
+openai = ["langchain-openai>=0.1.0"]
+groq = ["langchain-groq>=0.1.0"]
+ollama = ["langchain-ollama>=0.1.0"]
+huggingface = [
+  "langchain-huggingface>=0.0.1",
+  "transformers>=4.30.0",
+  "torch>=2.0.0",
+]
+postgres = [
+  "langgraph-checkpoint-postgres>=3.1.0",
+  "psycopg2-binary>=2.9.0",
+]
+sqlite = ["langgraph-checkpoint-sqlite>=3.1.0"]
+test = ["pytest>=8.0.0"]

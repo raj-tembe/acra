@@ -1,0 +1,42 @@
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-core>=0.3.0
+
+# LLM Providers - Core
+langchain-google-genai>=2.0.0
+google-generativeai>=0.8.0
+
+# LLM Providers - Optional (install as needed)
+# pip install langchain-openai
+langchain-openai>=0.1.0
+# pip install langchain-groq
+langchain-groq>=0.1.0
+# pip install langchain-ollama
+langchain-ollama>=0.1.0
+# pip install langchain-huggingface
+langchain-huggingface>=0.0.1
+
+# Checkpoint backends - Optional (install as needed)
+# pip install langgraph-checkpoint-sqlite
+langgraph-checkpoint-sqlite>=3.1.0
+# pip install langgraph-checkpoint-postgres
+langgraph-checkpoint-postgres>=3.1.0
+
+# HuggingFace utilities (optional, for local inference)
+transformers>=4.30.0
+torch>=2.0.0
+
+# Core dependencies
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+platformdirs>=4.0.0
+chromadb>=0.5.0
+arxiv>=2.1.0
+tavily-python>=0.3.0
+google-search-results>=2.4.0
+PyGithub>=2.3.0
+psycopg2-binary>=2.9.0
+langsmith>=0.1.0
+
+# Testing
+pytest>=8.0.0

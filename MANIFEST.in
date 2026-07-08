@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include acra/prompts *
+recursive-include acra/schemas *
+recursive-include acra/ui *
+recursive-include acra/config *
+recursive-include acra/agents *
