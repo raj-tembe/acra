@@ -27,7 +27,11 @@ def research(
     output: Optional[str] = typer.Option(None, help="Write research output to a file."),
     save: bool = typer.Option(False, help="Persist research output into memory."),
     follow_up: bool = typer.Option(False, help="Keep the session open for follow-up questions."),
-    no_memory: bool = typer.Option(False, help="Skip memory persistence for this research."),
+    use_memory: bool = typer.Option(
+        True,
+        "--memory/--no-memory",
+        help="Use memory persistence for this research.",
+    ),
     profile: Optional[str] = typer.Option(None, help="Profile to use."),
     json_output: bool = typer.Option(False, "--json", help="Output JSON instead of rich text."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed debug output."),
@@ -45,7 +49,7 @@ def research(
         "research_depth": depth,
         "research_sources": source_list,
         "follow_up": follow_up,
-        "save_to_memory": save and not no_memory,
+        "save_to_memory": save and use_memory,
         "profile": profile,
     }
 

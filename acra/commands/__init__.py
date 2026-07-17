@@ -1,6 +1,7 @@
 """acra command modules."""
 
 from .serve import app as serve_app
+from .ask import app as ask_app
 from .config import app as config_app
 from .brain import app as brain_app
 from .research import app as research_app
@@ -15,6 +16,7 @@ from .utils import app as utils_app
 
 __all__ = [
     "serve_app",
+    "ask_app",
     "config_app",
     "brain_app",
     "research_app",
