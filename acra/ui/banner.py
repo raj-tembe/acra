@@ -3,14 +3,7 @@
 from rich.panel import Panel
 from rich.console import Console
 
-MASCOT = r"""
-  ____   ____  ____
- / __ \ / __ \/ __ \
-| |  | | |  | | |  | |
-| |  | | |  | | |  | |
-| |__| | |__| | |__| |
- \____/ \____/ \____/
-"""
+from acra import __version__
 
 WELCOME_TEXT = "acra: agentic CLI for LLM task workflows"
 
@@ -18,12 +11,11 @@ WELCOME_TEXT = "acra: agentic CLI for LLM task workflows"
 def render_banner(provider: str, model: str, profile: str, workspace: str, theme: dict) -> Panel:
     console = Console()
     lines = [
-        f"[bold {theme['accent']}]acra v0.1.2[/bold {theme['accent']}]",
         f"Provider: {provider} · Model: {model}",
         f"Profile: {profile} · Workspace: {workspace}",
     ]
     content = "\n".join(lines)
-    return Panel(content, title=WELCOME_TEXT, subtitle=MASCOT, style=theme["border"], border_style=theme["border"])
+    return Panel(content, title="Session", style=theme["border"], border_style=theme["border"])
 
 
 def render_tips(theme: dict) -> Panel:

@@ -1,6 +1,6 @@
 """acra package root."""
 
-__version__ = "0.1.2"
+__version__ = "0.1.4"
 
 from .cli import main
 

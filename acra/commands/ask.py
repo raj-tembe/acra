@@ -1,5 +1,6 @@
 """Agent task commands for acra."""
 
+import uuid
 from typing import Optional
 
 import typer
@@ -24,7 +25,17 @@ def _run_task(
         "profile": profile,
         "interactive": interactive,
     }
-    result = omniagent_graph.invoke(state, config={"callbacks": [OmniAgentCallbacks()]})
+    # The compiled graph always carries a checkpointer, which requires a
+    # thread_id on every invoke call regardless of whether the caller wants
+    # persistence. A fresh id is generated per invocation; when --no-memory
+    # is set, nothing is done with it beyond satisfying the checkpointer, so
+    # no state is meaningfully persisted or reused across runs.
+    thread_id = str(uuid.uuid4())
+    config = {
+        "callbacks": [OmniAgentCallbacks()],
+        "configurable": {"thread_id": thread_id},
+    }
+    result = omniagent_graph.invoke(state, config=config)
     render_panel(result, title=task_label)
     return result
 

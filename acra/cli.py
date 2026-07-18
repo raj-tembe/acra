@@ -72,10 +72,16 @@ def main(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose logging."),
     quiet: bool = typer.Option(False, "--quiet", "-q", help="Suppress output."),
     timeout: int = typer.Option(0, "--timeout", help="Override execution timeout in seconds."),
+    party: bool = typer.Option(
+        False,
+        "--party",
+        "--easter-egg",
+        help="Show the rainbow party-mode startup banner.",
+    ),
 ):
     """acra: Agentic CLI for LLM powered task execution and research workflows."""
     if ctx.invoked_subcommand is None:
-        launch_shell(profile=profile, workspace=workspace)
+        launch_shell(profile=profile, workspace=workspace, party=party)
 
 
 if __name__ == "__main__":

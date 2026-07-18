@@ -1,6 +1,7 @@
 """Research command module for acra."""
 
 import json
+import uuid
 import typer
 from typing import List, Optional
 
@@ -53,7 +54,14 @@ def research(
         "profile": profile,
     }
 
-    result = workflow.invoke(state, config={"callbacks": [OmniAgentCallbacks()]})
+    thread_id = str(uuid.uuid4())
+    result = workflow.invoke(
+        state,
+        config={
+            "callbacks": [OmniAgentCallbacks()],
+            "configurable": {"thread_id": thread_id},
+        },
+    )
 
     report = format_research_report(result, output_format=format)
 

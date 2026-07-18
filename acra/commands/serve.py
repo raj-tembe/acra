@@ -7,7 +7,15 @@ app = typer.Typer(help="Interactive shell for acra.", invoke_without_command=Tru
 
 
 @app.callback()
-def serve(ctx: typer.Context):
+def serve(
+    ctx: typer.Context,
+    party: bool = typer.Option(
+        False,
+        "--party",
+        "--easter-egg",
+        help="Show the rainbow party-mode startup banner.",
+    ),
+):
     """Launch the interactive acra shell."""
     if ctx.invoked_subcommand is None:
-        launch_shell()
+        launch_shell(party=party)

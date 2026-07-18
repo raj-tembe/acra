@@ -9,6 +9,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.shortcuts import CompleteStyle
 from acra.ui.banner import render_banner, render_tips
+from acra.ui.animated_banner import render_intro
 from acra.ui.theme import get_theme
 from acra.config.profile_manager import ProfileManager
 from rich.console import Console
@@ -31,9 +32,10 @@ class SlashCompleter(Completer):
                 yield completion
 
 
-def launch_shell(profile: str = None, workspace: str = None):
+def launch_shell(profile: str = None, workspace: str = None, party: bool = False):
     config = ProfileManager().load_profile(profile)
     theme = get_theme(config.get("theme", "dark-orange"))
+    render_intro(theme, party=party)
     banner = render_banner(
         config.get("provider", "gemini"),
         config.get("model", "gemini-2.5-flash"),
