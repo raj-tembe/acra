@@ -23,6 +23,23 @@ It is built for developers who want a local CLI for asking an LLM-powered agent 
 - ChromaDB-backed vector memory and JSON workflow memory modules
 - Optional extras for provider-specific dependencies and checkpoint backends
 
+## What's New in 0.1.5
+
+### New features
+
+- Provider credentials can now be stored with `acra keys` and used directly by Gemini, OpenAI, Groq, and HuggingFace Cloud workflows.
+- The configuration wizard stores provider and research credentials outside the plaintext profile file, using the OS keyring when available and a permission-restricted local fallback otherwise.
+- Long-running task and research commands show a live progress spinner.
+- Task and research results are rendered as readable summaries, findings, sources, and generated-file lists instead of raw workflow state.
+- Commands launched from the interactive shell now stream their output live.
+
+### Bug fixes
+
+- Fixed saved provider keys not being read by LLM initialization.
+- Fixed profile setup writing API and research keys to plaintext configuration.
+- Fixed interactive-shell commands buffering output until completion.
+- Fixed unwieldy raw dictionary and message-object output after task or research runs.
+
 ## Requirements
 
 - Python `>=3.11`
@@ -101,7 +118,7 @@ acra config show
 Store a key in your OS keyring:
 
 ```bash
-acra keys set provider
+acra keys set GEMINI_API_KEY
 ```
 
 Run a research workflow:
@@ -248,13 +265,13 @@ The setup wizard prompts for:
 Set a key interactively:
 
 ```bash
-acra keys set provider
+acra keys set OPENAI_API_KEY
 ```
 
 Set a key directly:
 
 ```bash
-acra keys set provider "your-key"
+acra keys set OPENAI_API_KEY "your-key"
 ```
 
 List key status:
@@ -266,8 +283,10 @@ acra keys list
 Delete a key:
 
 ```bash
-acra keys delete provider
+acra keys delete OPENAI_API_KEY
 ```
+
+Supported provider key names are `GEMINI_API_KEY`, `OPENAI_API_KEY`, `GROQ_API_KEY`, and `HF_API_KEY`. Keys are stored in your OS keyring when it is available. On systems without a keyring backend, acra uses a local credentials file with owner-only permissions.
 
 Research key names:
 
@@ -280,7 +299,10 @@ acra keys set research.arxiv
 
 Environment fallback variables:
 
-- `ACRA_PROVIDER_KEY`
+- `GEMINI_API_KEY` or `GOOGLE_GEMINI_API_KEY`
+- `OPENAI_API_KEY`
+- `GROQ_API_KEY`
+- `HF_API_KEY`
 - `ACRA_RESEARCH_WEB_KEY`
 - `ACRA_RESEARCH_GITHUB_KEY`
 - `ACRA_RESEARCH_DOCS_KEY`
@@ -383,9 +405,9 @@ acra config show
 Keys:
 
 ```bash
-acra keys set provider
+acra keys set GEMINI_API_KEY
 acra keys list
-acra keys delete provider
+acra keys delete GEMINI_API_KEY
 ```
 
 Memory:
@@ -492,6 +514,7 @@ export OMNIAGENT_DATA_DIR=/path/to/acra-data
 
 Important subdirectories:
 
+- `credentials.json`: permission-restricted credential fallback when no OS keyring is available
 - `projects/`: generated project files
 - `memory/storage/`: JSON memory files
 - `memory/chroma_db/`: ChromaDB vector memory
@@ -499,7 +522,7 @@ Important subdirectories:
 
 ## Current Beta Notes
 
-- The package version is `0.1.2`.
+- The package version is `0.1.5`.
 - The top-level CLI currently attaches `serve`, `config`, `keys`, `research`, `memory`, `session`, `graph`, and `workspace`.
 - The codebase contains additional command modules such as `brain`, `context`, `logs`, and `plugin`, but they are not currently attached to the top-level CLI.
 - Some CLI command groups return placeholder output while the Python modules behind them continue to evolve.
@@ -531,7 +554,7 @@ export HF_API_KEY="your-token"
 Or store it with:
 
 ```bash
-acra keys set provider
+acra keys set GEMINI_API_KEY
 ```
 
 ### Ollama connection failure
@@ -560,7 +583,7 @@ export OLLAMA_BASE_URL=http://localhost:11434
 - PyPI package name: `acra-cli`
 - Console command: `acra`
 - Python import package: `acra`
-- Version: `0.1.2`
+- Version: `0.1.5`
 - Python: `>=3.11`
 - Console script: `acra=acra.cli:app_main`
 - Author: Raj Tembe

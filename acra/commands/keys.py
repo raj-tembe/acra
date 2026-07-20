@@ -16,7 +16,11 @@ app = typer.Typer(help="Key management commands for acra.")
 
 @app.command("set")
 def set_key_cmd(
-    name: str = typer.Argument(..., help="Key name, e.g. provider or research.github"),
+    name: str = typer.Argument(
+        ...,
+        help="Key name: GEMINI_API_KEY, OPENAI_API_KEY, GROQ_API_KEY, HF_API_KEY, "
+        "or research.<source> (web, github, docs, arxiv).",
+    ),
     value: Optional[str] = typer.Argument(None, help="API key value. If omitted, you will be prompted."),
 ):
     """Set a provider or research API key."""

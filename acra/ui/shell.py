@@ -70,21 +70,17 @@ def launch_shell(profile: str = None, workspace: str = None, party: bool = False
             console.print(f"[dim]→[/dim] {user_input}")
 
             cmd = [sys.executable, "-m", "acra"] + shlex.split(command_text)
+            # stdout/stderr are inherited (not captured) so the child process
+            # sees a real tty and any live output -- the run_with_spinner
+            # progress indicator, the animated banner, streamed agent output
+            # -- renders in real time instead of being buffered up and
+            # dumped all at once after the command finishes.
             completed = subprocess.run(
                 cmd,
                 cwd=os.getcwd(),
-                stdin=sys.stdin,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
             )
-            if completed.stdout:
-                console.print(completed.stdout, soft_wrap=True)
             if completed.returncode != 0:
-                if completed.stdout and "Missing command" in completed.stdout:
-                    console.print("[dim]Tip:[/dim] try a subcommand such as 'brain models' or 'config init'.")
-                else:
-                    console.print(f"[bold red]Command failed with exit code {completed.returncode}.[/bold red]")
+                console.print(f"[bold red]Command failed with exit code {completed.returncode}.[/bold red]")
         except KeyboardInterrupt:
             break
         except EOFError:

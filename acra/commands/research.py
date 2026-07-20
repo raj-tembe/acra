@@ -10,6 +10,7 @@ from acra.config.profile_manager import ProfileManager
 from acra.utils.output_formatter import format_research_report
 from acra.utils.keyring_manager import get_research_key_status
 from acra.ui.components import render_panel
+from acra.ui.spinner import run_with_spinner
 
 app = typer.Typer(help="Research commands for acra.")
 
@@ -55,12 +56,14 @@ def research(
     }
 
     thread_id = str(uuid.uuid4())
-    result = workflow.invoke(
+    result = run_with_spinner(
+        workflow.invoke,
         state,
         config={
             "callbacks": [OmniAgentCallbacks()],
             "configurable": {"thread_id": thread_id},
         },
+        message="Researching",
     )
 
     report = format_research_report(result, output_format=format)

@@ -10,6 +10,16 @@ CONFIG_DIR = Path.home() / ".acra"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 DEFAULT_PROFILE_NAME = "default"
 
+# Maps provider names to the credential name acra/agents/llm.py actually
+# reads via keyring_manager.get_key(). Ollama is local and needs no key.
+_PROVIDER_KEY_NAMES = {
+    "gemini": "GEMINI_API_KEY",
+    "openai": "OPENAI_API_KEY",
+    "groq": "GROQ_API_KEY",
+    "huggingface_cloud": "HF_API_KEY",
+    "huggingface_local": "HF_API_KEY",
+}
+
 
 def _ensure_config_dir() -> None:
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -69,19 +79,31 @@ class ProfileManager:
         api_key = getpass("Provider API key (hidden): ")
         theme = input("Theme (dark-orange/dark-blue/dark-green): ").strip() or "dark-orange"
         workspace = input("Workspace path (default=current directory): ").strip() or os.getcwd()
-        research_keys = {}
         print("Configure research keys. Press enter to skip a source.")
+        research_key_values = {}
         for source in ["web", "github", "docs", "arxiv"]:
             prompt = f"Research {source} API key (if required): "
             value = getpass(prompt) if source != "arxiv" else input(prompt).strip()
-            research_keys[source] = value or None
+            if value:
+                research_key_values[source] = value
+
+        # Secrets are stored via the OS keyring (falling back to a
+        # permission-locked local file when no OS backend is available),
+        # never written into the plaintext profile JSON. See
+        # acra/utils/keyring_manager.py.
+        from acra.utils.keyring_manager import set_key
+
+        provider_key_name = _PROVIDER_KEY_NAMES.get(provider)
+        if api_key and provider_key_name:
+            set_key(provider_key_name, api_key)
+        for source, value in research_key_values.items():
+            set_key(f"research.{source}", value)
 
         profile = {
             "provider": provider,
             "model": model,
             "theme": theme,
             "workspace": workspace,
-            "research_keys": research_keys,
         }
         self.save_profile(profile_name, profile)
         return profile_name

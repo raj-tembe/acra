@@ -73,10 +73,17 @@ class LLMInitializationError(Exception):
 
 def _init_gemini():
     """Initialize Google Gemini LLM."""
-    gemini_api_key = os.getenv("GOOGLE_GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
+    from acra.utils.keyring_manager import get_key
+
+    gemini_api_key = (
+        os.getenv("GOOGLE_GEMINI_API_KEY")
+        or os.getenv("GEMINI_API_KEY")
+        or get_key("GEMINI_API_KEY")
+    )
     if not gemini_api_key or gemini_api_key.startswith("your_"):
         raise EnvironmentError(
-            "GEMINI_API_KEY is not set. Add GOOGLE_GEMINI_API_KEY to your .env file."
+            "GEMINI_API_KEY is not set. Run 'acra keys set GEMINI_API_KEY' "
+            "or add GOOGLE_GEMINI_API_KEY to your .env file."
         )
     os.environ["GOOGLE_API_KEY"] = gemini_api_key
     return ChatGoogleGenerativeAI(
@@ -91,10 +98,13 @@ def _init_openai():
         raise LLMInitializationError(
             "OpenAI support is not installed. Install with: pip install langchain-openai"
         )
-    openai_api_key = os.getenv("OPENAI_API_KEY")
+    from acra.utils.keyring_manager import get_key
+
+    openai_api_key = os.getenv("OPENAI_API_KEY") or get_key("OPENAI_API_KEY")
     if not openai_api_key or openai_api_key.startswith("your_"):
         raise LLMInitializationError(
-            "OPENAI_API_KEY is not set. Add OPENAI_API_KEY to your .env file."
+            "OPENAI_API_KEY is not set. Run 'acra keys set OPENAI_API_KEY' "
+            "or add OPENAI_API_KEY to your .env file."
         )
     return ChatOpenAI(
         model=OPENAI_MODEL,
@@ -109,10 +119,13 @@ def _init_groq():
         raise LLMInitializationError(
             "Groq support is not installed. Install with: pip install langchain-groq"
         )
-    groq_api_key = os.getenv("GROQ_API_KEY")
+    from acra.utils.keyring_manager import get_key
+
+    groq_api_key = os.getenv("GROQ_API_KEY") or get_key("GROQ_API_KEY")
     if not groq_api_key or groq_api_key.startswith("your_"):
         raise LLMInitializationError(
-            "GROQ_API_KEY is not set. Add GROQ_API_KEY to your .env file."
+            "GROQ_API_KEY is not set. Run 'acra keys set GROQ_API_KEY' "
+            "or add GROQ_API_KEY to your .env file."
         )
     return ChatGroq(
         model=GROQ_MODEL,
@@ -150,10 +163,13 @@ def _init_huggingface_cloud():
             "HuggingFace not installed. Install with: pip install langchain-huggingface"
         )
 
-    huggingface_api_key = os.getenv("HF_API_KEY")
+    from acra.utils.keyring_manager import get_key
+
+    huggingface_api_key = os.getenv("HF_API_KEY") or get_key("HF_API_KEY")
     if not huggingface_api_key or huggingface_api_key.startswith("your_"):
         raise LLMInitializationError(
-            "HF_API_KEY is not set. Add HF_API_KEY to your .env file. "
+            "HF_API_KEY is not set. Run 'acra keys set HF_API_KEY' or add "
+            "HF_API_KEY to your .env file. "
             "Get a token at: https://huggingface.co/settings/tokens"
         )
 
