@@ -8,7 +8,7 @@ from typing import Any
 
 console = Console()
 
-_MAX_FIELD_LENGTH = 2000
+_MAX_FIELD_LENGTH = 5000
 
 
 def _stringify(value: Any) -> str:

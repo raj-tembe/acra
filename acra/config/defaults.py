@@ -3,6 +3,7 @@ OmniAgent central configuration.
 All hardcoded constants live here. Import from this module everywhere.
 """
 import os
+import sys
 from pathlib import Path
 try:
     from dotenv import load_dotenv
@@ -20,14 +21,21 @@ load_dotenv()
 # Project root
 PROJECT_ROOT = Path(__file__).resolve().parent
 
-# User data directory — resolves to the right place per OS:
-#   Linux:   ~/.local/share/omniagent
-#   macOS:   ~/Library/Application Support/omniagent
-#   Windows: C:\Users\<you>\AppData\Local\omniagent\omniagent
 def _default_user_data_dir() -> str:
+    # If a custom resolver was provided, use it
     if user_data_dir is not None:
-        return user_data_dir("omniagent", "omniagent")
-    return str(Path.home() / ".local" / "share" / "omniagent")
+        return user_data_dir("acra", "acra")
+
+    # Otherwise, determine the standard OS‑specific data directory
+    if sys.platform == "win32":
+        local_app_data = os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))
+        return str(Path(local_app_data) / "acra" / "acra")
+    elif sys.platform == "darwin":
+        # macOS: ~/Library/Application Support/acra
+        return str(Path.home() / "Library" / "Application Support" / "acra")
+    else:
+        # Linux and other Unix-like: ~/.local/share/acra
+        return str(Path.home() / ".local" / "share" / "acra")
 
 
 USER_DATA_DIR = Path(
