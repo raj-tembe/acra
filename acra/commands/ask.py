@@ -7,7 +7,7 @@ import typer
 
 from acra.graph.workflow import OmniAgentCallbacks, omniagent_graph
 from acra.ui.components import render_panel
-from acra.ui.spinner import run_with_spinner
+from acra.ui.spinner import run_workflow_with_thoughts
 from acra.utils.output_formatter import format_task_result
 
 app = typer.Typer(help="Agent task commands for acra.")
@@ -37,11 +37,11 @@ def _run_task(
         "callbacks": [OmniAgentCallbacks()],
         "configurable": {"thread_id": thread_id},
     }
-    result = run_with_spinner(
-        omniagent_graph.invoke,
+    result = run_workflow_with_thoughts(
+        omniagent_graph,
         state,
-        config=config,
-        message=f"Running {task_label}",
+        config,
+        task_label=f"Running {task_label}",
     )
     render_panel(format_task_result(result), title=task_label)
     return result
