@@ -5,6 +5,8 @@ from langgraph.graph import (
 )
 import time
 
+from langchain_core.callbacks import BaseCallbackHandler
+
 from acra.graph.state import AgentState
 
 from acra.graph.nodes import (
@@ -20,8 +22,19 @@ from acra.observability.metrics import metrics_tracker
 from acra.observability.monitoring import system_monitor
 
 
-class OmniAgentCallbacks:
-    """LangGraph callbacks for metrics and monitoring."""
+class OmniAgentCallbacks(BaseCallbackHandler):
+    """LangGraph callbacks for metrics and monitoring.
+
+    Subclasses BaseCallbackHandler (rather than duck-typing a plain class)
+    so every callback method LangChain might call -- including
+    on_llm_new_token, which only fires once real token streaming is in use
+    (see acra.ui.spinner.run_workflow_with_thoughts) -- has a safe no-op
+    default unless explicitly overridden below. Without this base class,
+    an unhandled callback raises AttributeError inside LangChain's
+    callback manager for every single token, which it catches per-handler
+    and logs rather than raising, but the run continues underneath a wall
+    of "Error in OmniAgentCallbacks.on_llm_new_token callback" spam.
+    """
 
     raise_error = False
     ignore_chain = False
